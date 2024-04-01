@@ -211,7 +211,7 @@ function editUser(){
 
 
 function viewStatistics() {
-    window.location.href="../Thống kê/Thống kê.html";
+    window.location.href="analyst.html";
 }
 
 
@@ -244,7 +244,7 @@ button.addEventListener('click', function() {
 
 // đóng modal khi nhấn lưu
 document.addEventListener('DOMContentLoaded', function () {
-    var saveButton = document.querySelector('#exampleModal.modal-footer.#luu');
+    var saveButton = document.querySelector('#exampleModal.modal-footer.luuUser');
     saveButton.addEventListener('click', function () {
         $('#exampleModal').modal('hide');
     });
