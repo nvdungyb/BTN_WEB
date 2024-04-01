@@ -1,14 +1,10 @@
-package com.examBE.BackendExamSys.controllers;
+package com.dzungyb.btn_web.controller;
 
-import com.examBE.BackendExamSys.entities.QuestionEntity;
-import com.examBE.BackendExamSys.models.ApiResult;
-import com.examBE.BackendExamSys.models.Dto.QuestionDto;
-import com.examBE.BackendExamSys.services.QuestionService;
-import com.examBE.BackendExamSys.utils.Constants;
+import com.dzungyb.btn_web.entity.Question;
+import com.dzungyb.btn_web.model.dto.QuestionDto;
+import com.dzungyb.btn_web.service.QuestionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,49 +18,49 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @GetMapping("/list")
-    public ResponseEntity<ApiResult<List<QuestionEntity>>> showList() {
-        List<QuestionEntity> userList = questionService.getAll();
+    public @ResponseBody List<Question> showList() {
+        List<Question> userList = questionService.getAll();
         String message = "Success";
         if (userList.isEmpty()) {
             message = "Empty";
         }
-        ApiResult<List<QuestionEntity>> result = ApiResult.create(HttpStatus.OK, message, userList);
-        return ResponseEntity.ok(result);
+
+        return userList;
     }
+
     @PostMapping(path = "/create")
-    public ResponseEntity<ApiResult<QuestionDto>> create(@Valid @RequestBody QuestionDto questionDto) {
-        ApiResult<QuestionDto> result = null;
-        try{
+    public @ResponseBody QuestionDto create(@Valid @RequestBody QuestionDto questionDto) {
+        QuestionDto result = null;
+        try {
             questionService.create(questionDto);
-            result = ApiResult.create(HttpStatus.OK, Constants.SAVE_DATA_SUCCESS, questionDto);
+            result = questionDto;
+        } catch (Exception ex) {
+            result = null;
         }
-        catch (Exception ex){
-            result = ApiResult.create(HttpStatus.CONFLICT, ex.getMessage(), null);
-        }
-        return ResponseEntity.ok(result);
+        return result;
     }
+
     @PutMapping(path = "/update")
-    public ResponseEntity<ApiResult<QuestionEntity>> edit(@Valid @RequestBody QuestionEntity questionEntity) {
-        ApiResult<QuestionEntity> result = null;
-        try{
+    public Question edit(@Valid @RequestBody Question questionEntity) {
+        Question result = null;
+        try {
             questionService.edit(questionEntity);
-            result = ApiResult.create(HttpStatus.OK, Constants.EDIT_DATA_SUCCESS, questionEntity);
+            result = questionEntity;
+        } catch (Exception ex) {
+            result = null;
         }
-        catch (Exception ex){
-            result = ApiResult.create(HttpStatus.CONFLICT, ex.getMessage(), null);
-        }
-        return ResponseEntity.ok(result);
+        return result;
     }
+
     @DeleteMapping(path = "/delete")
-    public ResponseEntity<ApiResult<Integer>> delete(@RequestParam(name = "id", required = false, defaultValue = "") int id) {
-        ApiResult<Integer> result = null;
-        try{
+    public Integer delete(@RequestParam(name = "id", required = false, defaultValue = "") int id) {
+        Integer result = null;
+        try {
             questionService.delete(id);
-            result = ApiResult.create(HttpStatus.OK, Constants.EDIT_DATA_SUCCESS, id);
+            result = id;
+        } catch (Exception ex) {
+            result = 0;
         }
-        catch (Exception ex){
-            result = ApiResult.create(HttpStatus.CONFLICT, ex.getMessage(), id);
-        }
-        return ResponseEntity.ok(result);
+        return result;
     }
 }
