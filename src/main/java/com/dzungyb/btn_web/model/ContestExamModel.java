@@ -1,10 +1,8 @@
-package com.examBE.BackendExamSys.models;
+package com.dzungyb.btn_web.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Arrays;
 
 @Data
 @NoArgsConstructor
