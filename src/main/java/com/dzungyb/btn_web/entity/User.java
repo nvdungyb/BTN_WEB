@@ -17,10 +17,13 @@ public class User {
     private int Id;
 
     @Column(name = "name", nullable = false, length = 40)
-    private String userName;
+    private String name;
 
     @Column(name = "gender", nullable = false)
     private Boolean gender;
+
+    @Column(name = "username", nullable = false, length = 40)
+    private String username;
 
     @Column(name = "password", nullable = false, length = 50)
     private String password;
