@@ -25,6 +25,9 @@ public class UserOut {
     @Column(name = "gender", nullable = false)
     Boolean gender;
 
+    @Column(name = "username", nullable = false, length = 40)
+    String username;
+
     @Column(name = "email", nullable = false, length = 50)
     String email;
 }

@@ -42,7 +42,7 @@ public class UserService {
     public UserOut login(String username, String password) {
         User user = userRep.findFirstByUsername(username);
         if (user != null && user.getPassword().contentEquals(password)) {
-            return UserOut.create(user.getId(), user.getName(), user.getGender(), user.getEmail());
+            return UserOut.create(user.getId(), user.getName(), user.getGender(), user.getUsername(), user.getEmail());
         }
         return null;
     }
