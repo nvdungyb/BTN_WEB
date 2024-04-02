@@ -78,7 +78,7 @@ public class ContestService {
         return contestList;
     }
 
-    public void create(ContestDto newContest) {
+    public ContestDto create(ContestDto newContest) {
         if (Valids.isEmpty(newContest.getIdExam())) throw new RuntimeException("Id Exam is empty");
         else {
             if (!examRep.existsById(newContest.getIdExam())) throw new RuntimeException("Exam is not exist");
@@ -88,6 +88,7 @@ public class ContestService {
             if (!userRep.existsById(newContest.getIdUser())) throw new RuntimeException("User is not exist");
         }
         contestRep.save(ToContestEntity(newContest));
+        return newContest;
     }
 
     public void edit(Contest newContest) {

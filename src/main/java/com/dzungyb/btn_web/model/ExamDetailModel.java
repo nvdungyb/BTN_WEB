@@ -1,16 +1,13 @@
-package com.examBE.BackendExamSys.models;
+package com.dzungyb.btn_web.model;
 
-import com.examBE.BackendExamSys.entities.ExamEntity;
-import com.examBE.BackendExamSys.entities.QuestionEntity;
+import com.dzungyb.btn_web.entity.Exam;
+import com.dzungyb.btn_web.entity.Question;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.awt.geom.QuadCurve2D;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
-
 
 @Data
 @NoArgsConstructor
@@ -23,8 +20,9 @@ public class ExamDetailModel {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private int timeDuration;
-    List<QuestionEntity> question;
-    public ExamDetailModel(ExamEntity exam, List<QuestionEntity> question){
+    List<Question> question;
+
+    public ExamDetailModel(Exam exam, List<Question> question){
         this.id = exam.getId();
         this.name = exam.getName();
         this.description = exam.getDescription();
