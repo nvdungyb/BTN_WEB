@@ -1,6 +1,6 @@
 package com.dzungyb.btn_web.controller;
 
-import com.dzungyb.btn_web.model.User;
+import com.dzungyb.btn_web.entity.User;
 import com.dzungyb.btn_web.request.UserRequest;
 import com.dzungyb.btn_web.service.UserService;
 import jakarta.websocket.server.PathParam;
@@ -23,12 +23,6 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(@PathParam("email") String email, @PathParam("password") String password, Model model) {
-        User user = userService.getuserByEmail(email);
-        System.out.println(user);
-        if (user.getPassword().equals(password)) {
-            model.addAttribute("user", user);
-            return "home";
-        }
 
         return "index";
     }
@@ -37,10 +31,8 @@ public class UserController {
     public @ResponseBody User register(@RequestBody UserRequest request) {
         User user = new User();
         user.setUserName(request.getUserName());
-        user.setEmail(request.getEmail());
+            user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
 
         if (userService.checkExistedEmail(request.getEmail())) {
             return null;
@@ -56,7 +48,7 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public @ResponseBody String deleteUser(@PathVariable("id") String id) {
+    public @ResponseBody String deleteUser(@PathVariable("id") int id) {
         userService.deleteUser(id);
         return "User deleted";
     }
