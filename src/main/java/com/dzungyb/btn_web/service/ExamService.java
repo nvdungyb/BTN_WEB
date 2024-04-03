@@ -4,6 +4,7 @@ import com.dzungyb.btn_web.entity.Contest;
 import com.dzungyb.btn_web.entity.Exam;
 import com.dzungyb.btn_web.entity.Question;
 import com.dzungyb.btn_web.entity.User;
+import com.dzungyb.btn_web.error.ErrorException;
 import com.dzungyb.btn_web.model.ExamDetailModel;
 import com.dzungyb.btn_web.model.dto.ExamDto;
 import com.dzungyb.btn_web.model.dto.ExamQuestionDto;
@@ -86,49 +87,49 @@ public class ExamService {
         return examDetail;
     }
 
-    public Exam searchById(int id) {
+    public Exam searchById(int id) throws ErrorException {
         Exam exam = examRep.findFirstById(id);
-        if (exam == null) throw new RuntimeException("Exam is not exits");
+        if (exam == null) throw new ErrorException("Exam is not exits");
         return exam;
     }
 
-    public ExamDetailModel searchDetailById(int id) {
+    public ExamDetailModel searchDetailById(int id) throws ErrorException {
         Exam exam = examRep.findFirstById(id);
-        if (exam == null) throw new RuntimeException("Exam is not exits");
+        if (exam == null) throw new ErrorException("Exam is not exits");
         List<Question> question = questionRep.findByIdExam(id);
         return new ExamDetailModel(exam, question);
     }
 
-    public void create(ExamDto examDto) {
-        if (Valids.isEmpty(examDto.getName())) throw new RuntimeException("Ten trong");
-        if (Valids.isEmpty(examDto.getDescription())) throw new RuntimeException("Mo ta trong");
-        if (Valids.isEmpty(examDto.getType())) throw new RuntimeException("Loai trong");
+    public void create(ExamDto examDto) throws ErrorException {
+        if (Valids.isEmpty(examDto.getName())) throw new ErrorException("Ten trong");
+        if (Valids.isEmpty(examDto.getDescription())) throw new ErrorException("Mo ta trong");
+        if (Valids.isEmpty(examDto.getType())) throw new ErrorException("Loai trong");
         Exam newExam = ToExamEntity(examDto);
         newExam = examRep.save(newExam);
         System.out.println(newExam.getId());
     }
 
-    public void createAll(ExamQuestionDto examQuestionDto) {
-        if (Valids.isEmpty(examQuestionDto.getName())) throw new RuntimeException("Ten trong");
-        if (Valids.isEmpty(examQuestionDto.getDescription())) throw new RuntimeException("Mo ta trong");
-        if (Valids.isEmpty(examQuestionDto.getType())) throw new RuntimeException("Loai trong");
-        if (examQuestionDto.getQuestion().isEmpty()) throw new RuntimeException("Phai co it nhat cau hoi");
+    public void createAll(ExamQuestionDto examQuestionDto) throws ErrorException {
+        if (Valids.isEmpty(examQuestionDto.getName())) throw new ErrorException("Ten trong");
+        if (Valids.isEmpty(examQuestionDto.getDescription())) throw new ErrorException("Mo ta trong");
+        if (Valids.isEmpty(examQuestionDto.getType())) throw new ErrorException("Loai trong");
+        if (examQuestionDto.getQuestion().isEmpty()) throw new ErrorException("Phai co it nhat cau hoi");
         List<QuestionDto> questionDtoList = examQuestionDto.getQuestion();
         for (int i = 0; i < questionDtoList.size(); i++) {
             if (Valids.isEmpty(questionDtoList.get(i).getContent()))
-                throw new RuntimeException(MessageFormat.format("Cau hoi {0} trong", i + 1));
+                throw new ErrorException(MessageFormat.format("Cau hoi {0} trong", i + 1));
             if (Valids.isEmpty(questionDtoList.get(i).getAnswer1()))
-                throw new RuntimeException(MessageFormat.format("Cau hoi {0} khong co dap an 1", i + 1));
+                throw new ErrorException(MessageFormat.format("Cau hoi {0} khong co dap an 1", i + 1));
             if (Valids.isEmpty(questionDtoList.get(i).getAnswer2()))
-                throw new RuntimeException(MessageFormat.format("Cau hoi {0} khong co dap an 2", i + 1));
+                throw new ErrorException(MessageFormat.format("Cau hoi {0} khong co dap an 2", i + 1));
             if (Valids.isEmpty(questionDtoList.get(i).getAnswer3()))
-                throw new RuntimeException(MessageFormat.format("Cau hoi {0} khong co dap an 3", i + 1));
+                throw new ErrorException(MessageFormat.format("Cau hoi {0} khong co dap an 3", i + 1));
             if (Valids.isEmpty(questionDtoList.get(i).getAnswer4()))
-                throw new RuntimeException(MessageFormat.format("Cau hoi {0} khong co dap an 4", i + 1));
+                throw new ErrorException(MessageFormat.format("Cau hoi {0} khong co dap an 4", i + 1));
             if (Valids.isEmpty(questionDtoList.get(i).getRightAnswer()))
-                throw new RuntimeException(MessageFormat.format("Cau hoi {0} khong co dap an dung", i + 1));
+                throw new ErrorException(MessageFormat.format("Cau hoi {0} khong co dap an dung", i + 1));
             if (questionDtoList.get(i).getRightAnswer() < 1 || questionDtoList.get(i).getRightAnswer() > 4)
-                throw new RuntimeException(MessageFormat.format("Cau hoi {0} dap an dung chi duoc phep tu 1 den 4", i + 1));
+                throw new ErrorException(MessageFormat.format("Cau hoi {0} dap an dung chi duoc phep tu 1 den 4", i + 1));
         }
         Exam newExam = ToExamEntity(examQuestionDto);
         newExam = examRep.save(newExam);
@@ -149,8 +150,8 @@ public class ExamService {
         contestRep.saveAll(listContest);
     }
 
-    public void edit(Exam newExamEntity) {
-        if (Valids.isEmpty(newExamEntity.getId())) throw new RuntimeException("Id Exam is Empty");
+    public void edit(Exam newExamEntity) throws ErrorException {
+        if (Valids.isEmpty(newExamEntity.getId())) throw new ErrorException("Id Exam is Empty");
         Exam examEntity = examRep.findFirstById(newExamEntity.getId());
         if (!Valids.isEmpty(newExamEntity.getName())) examEntity.setName(newExamEntity.getName());
         if (!Valids.isEmpty(newExamEntity.getDescription())) examEntity.setDescription(newExamEntity.getDescription());
@@ -162,15 +163,15 @@ public class ExamService {
         examRep.save(examEntity);
     }
 
-    public void editAll(ExamDetailModel examDetailModel) {
-        if (Valids.isEmpty(examDetailModel.getId())) throw new RuntimeException("Data is empty!");
+    public void editAll(ExamDetailModel examDetailModel) throws ErrorException {
+        if (Valids.isEmpty(examDetailModel.getId())) throw new ErrorException("Data is empty!");
         Exam preExam = examRep.findFirstById(examDetailModel.getId());
-        if (preExam == null) throw new RuntimeException("Data is empty!");
+        if (preExam == null) throw new ErrorException("Data is empty!");
         if (!Valids.isEmpty(examDetailModel.getName())) preExam.setName(examDetailModel.getName());
         if (!Valids.isEmpty(examDetailModel.getDescription())) preExam.setDescription(examDetailModel.getDescription());
         if (!Valids.isEmpty(examDetailModel.getType())) preExam.setType(examDetailModel.getType());
 
-        if (examDetailModel.getQuestion().isEmpty()) throw new RuntimeException("Phai co it nhat cau hoi");
+        if (examDetailModel.getQuestion().isEmpty()) throw new ErrorException("Phai co it nhat cau hoi");
         List<Question> newQuestionList = examDetailModel.getQuestion();
         List<Question> questionList = questionRep.findByIdExam(examDetailModel.getId());
         List<Question> deleteQuestionList = new ArrayList<>();
@@ -205,8 +206,8 @@ public class ExamService {
         questionRep.deleteAll(deleteQuestionList);
     }
 
-    public void delete(int id) {
-        if (!examRep.existsById(id)) throw new RuntimeException("Khong tim thay du lieu phu hop");
+    public void delete(int id) throws ErrorException {
+        if (!examRep.existsById(id)) throw new ErrorException("Khong tim thay du lieu phu hop");
         examRep.deleteById(id);
     }
 }

@@ -2,6 +2,7 @@ package com.dzungyb.btn_web.service;
 
 import com.dzungyb.btn_web.entity.User;
 import com.dzungyb.btn_web.entity.UserOut;
+import com.dzungyb.btn_web.error.ErrorException;
 import com.dzungyb.btn_web.model.UserModel;
 import com.dzungyb.btn_web.model.dto.UserDto;
 import com.dzungyb.btn_web.model.dto.UserDtoOut;
@@ -65,54 +66,54 @@ public class UserService {
         return studentList;
     }
 
-    public UserModel searchById(int id) {
+    public UserModel searchById(int id) throws ErrorException {
         User userEntity = userRep.findFirstById(id);
-        if (userEntity == null) throw new RuntimeException("User not found!");
+        if (userEntity == null) throw new ErrorException("User not found!");
         return UserModel.toUsersModel(userEntity);
     }
 
-    public UserModel searchByEmail(String email) {
+    public UserModel searchByEmail(String email) throws ErrorException {
         User userEntity = userRep.findFirstByEmail(email);
-        if (userEntity == null) throw new RuntimeException("User not found!");
+        if (userEntity == null) throw new ErrorException("User not found!");
         return UserModel.toUsersModel(userEntity);
     }
 
-    public void register(UserDto userDto) {
-        if (Valids.isEmpty(userDto.getName())) throw new RuntimeException("Name is empty");
+    public void register(UserDto userDto) throws ErrorException {
+        if (Valids.isEmpty(userDto.getName())) throw new ErrorException("Name is empty");
         if (Valids.isEmpty(userDto.getGender()))
-            throw new RuntimeException("Gender is empty");
-        if (Valids.isEmpty(userDto.getEmail())) throw new RuntimeException("Email is empty");
+            throw new ErrorException("Gender is empty");
+        if (Valids.isEmpty(userDto.getEmail())) throw new ErrorException("Email is empty");
         if (Valids.isEmpty(userDto.getPassword()))
-            throw new RuntimeException("Password is empty");
+            throw new ErrorException("Password is empty");
         if (userRep.existsByEmail(userDto.getEmail()))
-            throw new RuntimeException("Email is already exist");
+            throw new ErrorException("Email is already exist");
         User userEntity = ToUserEntity(userDto);
         userRep.save(userEntity);
     }
 
-    public void registerAdmin(UserDto userDto) {
-        if (Valids.isEmpty(userDto.getName())) throw new RuntimeException("Name is empty");
+    public void registerAdmin(UserDto userDto) throws ErrorException {
+        if (Valids.isEmpty(userDto.getName())) throw new ErrorException("Name is empty");
         if (Valids.isEmpty(userDto.getGender()))
-            throw new RuntimeException("Gender is empty");
-        if (Valids.isEmpty(userDto.getEmail())) throw new RuntimeException("Email is empty");
+            throw new ErrorException("Gender is empty");
+        if (Valids.isEmpty(userDto.getEmail())) throw new ErrorException("Email is empty");
         if (Valids.isEmpty(userDto.getPassword()))
-            throw new RuntimeException("Password is empty");
+            throw new ErrorException("Password is empty");
         if (userRep.existsByEmail(userDto.getEmail()))
-            throw new RuntimeException("Email is already exist");
+            throw new ErrorException("Email is already exist");
         User userEntity = ToUserEntity(userDto);
         userEntity.setRoles("admin");
         userRep.save(userEntity);
     }
 
-    public User registerStudent(UserDto userDto) {
-        if (Valids.isEmpty(userDto.getName())) throw new RuntimeException("Name is empty");
+    public User registerStudent(UserDto userDto) throws ErrorException {
+        if (Valids.isEmpty(userDto.getName())) throw new ErrorException("Name is empty");
         if (Valids.isEmpty(userDto.getGender()))
-            throw new RuntimeException("Gender is empty");
-        if (Valids.isEmpty(userDto.getEmail())) throw new RuntimeException("Email is empty");
+            throw new ErrorException("Gender is empty");
+        if (Valids.isEmpty(userDto.getEmail())) throw new ErrorException("Email is empty");
         if (Valids.isEmpty(userDto.getPassword()))
-            throw new RuntimeException("Password is empty");
+            throw new ErrorException("Password is empty");
         if (userRep.existsByEmail(userDto.getEmail()))
-            throw new RuntimeException("Email is already exist");
+            throw new ErrorException("Email is already exist");
         User userEntity = ToUserEntity(userDto);
         userEntity.setRoles("student");
         userRep.save(userEntity);
@@ -120,10 +121,10 @@ public class UserService {
         return userEntity;
     }
 
-    public void edit(User newInfor) {
+    public void edit(User newInfor) throws ErrorException {
         User user = userRep.findFirstById(newInfor.getId());
         if (user == null) {
-            throw new RuntimeException("User not found");
+            throw new ErrorException("User not found");
         }
         if (!Valids.isEmpty(newInfor.getGender())) user.setGender(newInfor.getGender());
         if (!Valids.isEmpty(newInfor.getName())) user.setName(newInfor.getName());
@@ -132,14 +133,14 @@ public class UserService {
         if (!Valids.isEmpty(newInfor.getEmail())) {
             User userCheck = userRep.findFirstByEmail(newInfor.getEmail());
             if (userCheck != null && userCheck.getId() != user.getId())
-                throw new RuntimeException("Email is already exist");
+                throw new ErrorException("Email is already exist");
             else user.setEmail(newInfor.getEmail());
         }
         userRep.save(user);
     }
 
-    public void delete(int id) {
-        if (!userRep.existsById(id)) throw new RuntimeException("Khong tim thay du lieu phu hop");
+    public void delete(int id) throws ErrorException {
+        if (!userRep.existsById(id)) throw new ErrorException("Khong tim thay du lieu phu hop");
         userRep.deleteById(id);
     }
 }

@@ -2,6 +2,7 @@ package com.dzungyb.btn_web.service;
 
 import com.dzungyb.btn_web.entity.Contest;
 import com.dzungyb.btn_web.entity.Exam;
+import com.dzungyb.btn_web.error.ErrorException;
 import com.dzungyb.btn_web.model.ContestDetailModel;
 import com.dzungyb.btn_web.model.ContestExamModel;
 import com.dzungyb.btn_web.model.ContestUserModel;
@@ -43,22 +44,22 @@ public class ContestService {
         return contestRep.findAll();
     }
 
-    public Contest searchById(int id) {
+    public Contest searchById(int id) throws ErrorException {
         Contest contest = contestRep.findFirstById(id);
-        if (contest == null) throw new RuntimeException("Contest is not exits!");
+        if (contest == null) throw new ErrorException("Contest is not exits!");
         return contest;
     }
 
-    public ContestDetailModel searchDetailById(int id) {
+    public ContestDetailModel searchDetailById(int id) throws ErrorException {
         Contest contest = contestRep.findFirstById(id);
-        if (contest == null) throw new RuntimeException("Contest is not exits!");
+        if (contest == null) throw new ErrorException("Contest is not exits!");
         Exam exam = examRep.findFirstById(contest.getIdExam());
         return new ContestDetailModel(contest, exam);
     }
 
-    public List<ContestDetailModel> searchDetailByIdUser(int id) {
+    public List<ContestDetailModel> searchDetailByIdUser(int id) throws ErrorException {
         List<Contest> contestList = contestRep.findByIdUser(id);
-        if (contestList.isEmpty()) throw new RuntimeException("User have not done any test!");
+        if (contestList.isEmpty()) throw new ErrorException("User have not done any test!");
         List<Exam> examList = examRep.findAll();
         List<ContestDetailModel> contestDetailList = new ArrayList<>();
         for (Contest contest : contestList) {
@@ -72,34 +73,34 @@ public class ContestService {
         return contestDetailList;
     }
 
-    public List<Contest> searchByIdExam(int id) {
+    public List<Contest> searchByIdExam(int id) throws ErrorException {
         List<Contest> contestList = contestRep.findByIdExam(id);
-        if (contestList.isEmpty()) throw new RuntimeException("This contest has not created!");
+        if (contestList.isEmpty()) throw new ErrorException("This contest has not created!");
         return contestList;
     }
 
-    public ContestDto create(ContestDto newContest) {
-        if (Valids.isEmpty(newContest.getIdExam())) throw new RuntimeException("Id Exam is empty");
+    public ContestDto create(ContestDto newContest) throws ErrorException {
+        if (Valids.isEmpty(newContest.getIdExam())) throw new ErrorException("Id Exam is empty");
         else {
-            if (!examRep.existsById(newContest.getIdExam())) throw new RuntimeException("Exam is not exist");
+            if (!examRep.existsById(newContest.getIdExam())) throw new ErrorException("Exam is not exist");
         }
-        if (Valids.isEmpty(newContest.getIdUser())) throw new RuntimeException("Id user is empty");
+        if (Valids.isEmpty(newContest.getIdUser())) throw new ErrorException("Id user is empty");
         else {
-            if (!userRep.existsById(newContest.getIdUser())) throw new RuntimeException("User is not exist");
+            if (!userRep.existsById(newContest.getIdUser())) throw new ErrorException("User is not exist");
         }
         contestRep.save(ToContestEntity(newContest));
         return newContest;
     }
 
-    public void edit(Contest newContest) {
-        if (Valids.isEmpty(newContest.getId())) throw new RuntimeException("Contest is null");
+    public void edit(Contest newContest) throws ErrorException {
+        if (Valids.isEmpty(newContest.getId())) throw new ErrorException("Contest is null");
         Contest preContest = contestRep.findFirstById(newContest.getId());
         if (!Valids.isEmpty(newContest.getIdExam())) {
-            if (!examRep.existsById(newContest.getIdExam())) throw new RuntimeException("Exam not found");
+            if (!examRep.existsById(newContest.getIdExam())) throw new ErrorException("Exam not found");
             else preContest.setIdExam(newContest.getIdExam());
         }
         if (!Valids.isEmpty(newContest.getIdUser())) {
-            if (!userRep.existsById(newContest.getIdUser())) throw new RuntimeException("User not found");
+            if (!userRep.existsById(newContest.getIdUser())) throw new ErrorException("User not found");
             else preContest.setIdUser(newContest.getIdUser());
         }
         preContest.setScore(newContest.getScore());
@@ -113,8 +114,8 @@ public class ContestService {
         contestRep.save(preContest);
     }
 
-    public void delete(int id) {
-        if (!contestRep.existsById(id)) throw new RuntimeException("Khong tim thay du lieu phu hop");
+    public void delete(int id) throws ErrorException {
+        if (!contestRep.existsById(id)) throw new ErrorException("Khong tim thay du lieu phu hop");
         contestRep.deleteById(id);
     }
 

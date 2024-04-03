@@ -1,6 +1,7 @@
 package com.dzungyb.btn_web.controller;
 
 import com.dzungyb.btn_web.entity.Question;
+import com.dzungyb.btn_web.error.ErrorException;
 import com.dzungyb.btn_web.model.dto.QuestionDto;
 import com.dzungyb.btn_web.service.QuestionService;
 import jakarta.validation.Valid;
@@ -34,7 +35,7 @@ public class QuestionController {
         try {
             questionService.create(questionDto);
             result = questionDto;
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
             result = null;
         }
         return result;
@@ -48,17 +49,19 @@ public class QuestionController {
             result = questionEntity;
         } catch (Exception ex) {
             result = null;
+        } catch (ErrorException e) {
+            throw new RuntimeException(e);
         }
         return result;
     }
 
     @DeleteMapping(path = "/delete")
-    public Integer delete(@RequestParam(name = "id", required = false, defaultValue = "") int id) {
+    public @ResponseBody Integer delete(@RequestParam(name = "id", required = false, defaultValue = "") int id) {
         Integer result = null;
         try {
             questionService.delete(id);
             result = id;
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
             result = 0;
         }
         return result;

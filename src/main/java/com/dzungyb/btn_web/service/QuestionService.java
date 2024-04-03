@@ -2,6 +2,7 @@ package com.dzungyb.btn_web.service;
 
 import com.dzungyb.btn_web.entity.Exam;
 import com.dzungyb.btn_web.entity.Question;
+import com.dzungyb.btn_web.error.ErrorException;
 import com.dzungyb.btn_web.model.dto.QuestionDto;
 import com.dzungyb.btn_web.repository.ExamRepository;
 import com.dzungyb.btn_web.repository.QuestionRepository;
@@ -35,33 +36,33 @@ public class QuestionService {
         return questionRep.findAll();
     }
 
-    public Question searchById(int id) {
+    public Question searchById(int id) throws ErrorException {
         Question question = questionRep.findFirstById(id);
-        if (question == null) throw new RuntimeException("Question is not exist!");
+        if (question == null) throw new ErrorException("Question is not exist!");
         return question;
     }
 
-    public void create(QuestionDto newQuestion) {
-        if (Valids.isEmpty(newQuestion.getIdExam())) throw new RuntimeException("Id Exam trong");
-        if (Valids.isEmpty(newQuestion.getContent())) throw new RuntimeException("Cau hoi trong");
-        if (Valids.isEmpty(newQuestion.getAnswer1())) throw new RuntimeException("Dap an 1 trong");
-        if (Valids.isEmpty(newQuestion.getAnswer2())) throw new RuntimeException("Dap an 2 trong");
-        if (Valids.isEmpty(newQuestion.getAnswer3())) throw new RuntimeException("Dap an 3 trong");
-        if (Valids.isEmpty(newQuestion.getAnswer4())) throw new RuntimeException("Dap an 4 trong");
-        if (Valids.isEmpty(newQuestion.getRightAnswer())) throw new RuntimeException("Dap an dung trong");
+    public void create(QuestionDto newQuestion) throws ErrorException {
+        if (Valids.isEmpty(newQuestion.getIdExam())) throw new ErrorException("Id Exam trong");
+        if (Valids.isEmpty(newQuestion.getContent())) throw new ErrorException("Cau hoi trong");
+        if (Valids.isEmpty(newQuestion.getAnswer1())) throw new ErrorException("Dap an 1 trong");
+        if (Valids.isEmpty(newQuestion.getAnswer2())) throw new ErrorException("Dap an 2 trong");
+        if (Valids.isEmpty(newQuestion.getAnswer3())) throw new ErrorException("Dap an 3 trong");
+        if (Valids.isEmpty(newQuestion.getAnswer4())) throw new ErrorException("Dap an 4 trong");
+        if (Valids.isEmpty(newQuestion.getRightAnswer())) throw new ErrorException("Dap an dung trong");
         Exam exam = examRep.findFirstById(newQuestion.getIdExam());
-        if (exam == null) throw new RuntimeException("Khong ton tai Exam co ID " + newQuestion.getIdExam());
+        if (exam == null) throw new ErrorException("Khong ton tai Exam co ID " + newQuestion.getIdExam());
         questionRep.save(ToQuestionEntity(newQuestion));
     }
 
-    public void edit(Question newQuestion) {
-        if (Valids.isEmpty(newQuestion.getId())) throw new RuntimeException("Something Went Worng");
+    public void edit(Question newQuestion) throws ErrorException {
+        if (Valids.isEmpty(newQuestion.getId())) throw new ErrorException("Something Went Worng");
         Question question = questionRep.findFirstById(newQuestion.getId());
-        if (question == null) throw new RuntimeException("Something Went Worng");
+        if (question == null) throw new ErrorException("Something Went Worng");
 
         if (!Valids.isEmpty(newQuestion.getIdExam())) {
             Exam exam = examRep.findFirstById(newQuestion.getIdExam());
-            if (exam == null) throw new RuntimeException("Khong ton tai Exam co ID " + newQuestion.getIdExam());
+            if (exam == null) throw new ErrorException("Khong ton tai Exam co ID " + newQuestion.getIdExam());
             question.setIdExam(newQuestion.getIdExam());
         }
         if (!Valids.isEmpty(newQuestion.getContent())) question.setContent(newQuestion.getContent());
@@ -75,8 +76,8 @@ public class QuestionService {
         questionRep.save(question);
     }
 
-    public void delete(int id) {
-        if (!questionRep.existsById(id)) throw new RuntimeException("Khong tim thay du lieu phu hop");
+    public void delete(int id) throws ErrorException {
+        if (!questionRep.existsById(id)) throw new ErrorException("Khong tim thay du lieu phu hop");
         questionRep.deleteById(id);
     }
 }

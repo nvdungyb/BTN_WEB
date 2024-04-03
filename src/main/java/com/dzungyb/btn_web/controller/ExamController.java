@@ -1,6 +1,7 @@
 package com.dzungyb.btn_web.controller;
 
 import com.dzungyb.btn_web.entity.Exam;
+import com.dzungyb.btn_web.error.ErrorException;
 import com.dzungyb.btn_web.model.ExamDetailModel;
 import com.dzungyb.btn_web.model.dto.ExamDto;
 import com.dzungyb.btn_web.model.dto.ExamQuestionDto;
@@ -43,7 +44,7 @@ public class ExamController {
         Exam result = null;
         try {
             result = examService.searchById(id);
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
             result = null;
         }
         return result;
@@ -57,6 +58,8 @@ public class ExamController {
             result = exam;
         } catch (Exception ex) {
             result = null;
+        } catch (ErrorException e) {
+            throw new RuntimeException(e);
         }
         return result;
     }
@@ -67,7 +70,7 @@ public class ExamController {
         try {
             examService.create(examDto);
             result = examDto;
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
         }
         return result;
     }
@@ -79,6 +82,8 @@ public class ExamController {
             examService.createAll(examQuestionDto);
             result = examQuestionDto;
         } catch (Exception ex) {
+        } catch (ErrorException e) {
+            throw new RuntimeException(e);
         }
         return result;
     }
@@ -89,7 +94,7 @@ public class ExamController {
         try {
             examService.edit(examEntity);
             result = examEntity;
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
             result = null;
         }
         return result;
@@ -101,7 +106,7 @@ public class ExamController {
         try {
             examService.editAll(examDetailModel);
             result = examDetailModel;
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
         }
         return result;
     }
@@ -112,7 +117,7 @@ public class ExamController {
         try {
             examService.delete(id);
             result = id;
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
         }
         return result;
     }

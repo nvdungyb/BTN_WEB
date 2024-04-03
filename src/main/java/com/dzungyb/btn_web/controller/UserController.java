@@ -2,6 +2,7 @@ package com.dzungyb.btn_web.controller;
 
 import com.dzungyb.btn_web.entity.User;
 import com.dzungyb.btn_web.entity.UserOut;
+import com.dzungyb.btn_web.error.ErrorException;
 import com.dzungyb.btn_web.model.UserModel;
 import com.dzungyb.btn_web.model.dto.UserDto;
 import com.dzungyb.btn_web.model.dto.UserDtoOut;
@@ -54,7 +55,7 @@ public class UserController {
         try {
             UserModel user = userService.searchById(id);
             result = user;
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
             result = null;
         }
         return result;
@@ -66,7 +67,7 @@ public class UserController {
         try {
             UserModel user = userService.searchByEmail(email);
             result = user;
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
             result = null;
         }
         return result;
@@ -78,7 +79,7 @@ public class UserController {
         try {
             userService.register(userDto);
             result = userDto;
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
             result = null;
         }
         return result;
@@ -90,7 +91,7 @@ public class UserController {
         try {
             userService.registerAdmin(userDto);
             result = userDto;
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
             result = null;
         }
         return result;
@@ -101,7 +102,7 @@ public class UserController {
         User result = null;
         try {
             result = userService.registerStudent(userDto);
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
             result = null;
         }
         return result;
@@ -113,7 +114,7 @@ public class UserController {
         try {
             userService.edit(userEntity);
             result = userEntity;
-        } catch (Exception ex) {
+        } catch (Exception | ErrorException ex) {
             result = null;
         }
         return result;
@@ -127,6 +128,8 @@ public class UserController {
             result = id;
         } catch (Exception ex) {
             result = 0;
+        } catch (ErrorException e) {
+            throw new RuntimeException(e);
         }
         return result;
     }
