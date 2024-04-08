@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Xem kết quả</title>
+    <link rel="stylesheet" href="../css/style_xemkq.css">
+</head>
+
+<body>
+    <div class="title-bar">
+        <div class="img-container">
+            <img src="../img/logo_ptit.png">
+        </div>
+        <h1>Xem kết quả sinh viên</h1>
+    </div>
+
+    <div class="search-box">
+        <form action="" onsubmit="showResult()">
+            <input class="input-text" type="text" placeholder="Nhập mã sinh viên" required>
+            <input class="input-button" type="button" value="Tìm kiếm" onclick="findUser()">
+        </form>
+    </div>
+    
+    <div id="result">
+        <div class="info-box">      
+        </div>
+        <div class="exam-joined-box">
+            
+        </div>
+    
+        <div class="exam-detail-box">
+            <!-- <div class="test">
+                <h2>Tên kỳ thi</h2>
+                <div class="question">
+                    <h3 class="question-name">Nội dung câu hỏi</h3>
+                    <div class="answer">
+                        <div>Nội dung đáp án</div>
+                    </div>
+                    <div class="selected-answer">Đã chọn: A</div>
+                    <div class="correct-answer">Đáp án: A</div>
+                    <div class="explaination">
+                        Đây là lời giải thích.
+                    </div>
+                </div>
+                <div class="export-box">
+                    <button>Xuất PDF</button>
+                    <button>Xuất Excel</button>
+                </div>
+            </div> -->
+        </div>
+    </div>
+    <script src="../script/script_xemkq.js"></script>
+</body>
+
+</html>
